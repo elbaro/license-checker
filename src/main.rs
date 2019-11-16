@@ -24,7 +24,7 @@ fn get_comment<P: AsRef<Path>>(config: &Config, path: P) -> Result<&str, Error> 
 
 fn first_author<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     let path = path.as_ref();
-    let repo = git2::Repository::open(path)?;
+    let repo = git2::Repository::discover(path)?;
     
     let blame = repo.blame_file(path, None)?;
     let mut counter: HashMap<String, usize> = HashMap::new();
