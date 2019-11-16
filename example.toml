@@ -1,0 +1,23 @@
+template = '''
+Copyright (c) {year} Presto Labs Pte. Ltd.
+Author: {author}
+'''
+
+newline_after_shebang = true
+newline_after_template = true
+
+[cc]
+extensions = ["c","cc","cpp","h","hpp"]
+comment = "//"
+
+[python]
+extensions = ["py"]
+comment = "#"
+
+[rust]
+extensions = ["rs"]
+comment = "//"
+
+[sh]
+extensions = ["sh"]
+comment = "#"
