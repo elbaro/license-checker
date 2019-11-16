@@ -31,7 +31,7 @@ fn first_author<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     for hunk in blame.iter() {
         let sig = hunk.orig_signature();
         if let Some(name) = sig.name() {
-            *counter.entry(name.to_string()).or_default() += 1;
+            *counter.entry(name.to_string()).or_default() += hunk.lines_in_hunk();
         }
     }
     if counter.is_empty() {
