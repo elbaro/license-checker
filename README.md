@@ -8,3 +8,18 @@ license-checker --config example.toml format test/main2.cc
 ```
 
 Please see `example.toml`.
+
+## Example
+
+Original:
+```
+int main() { return 0; }
+```
+
+Formatted:
+```
+// Copyright (c) 2019 Presto Labs Pte. Ltd.
+// Author: elbaro
+
+int main() { return 0; }
+```

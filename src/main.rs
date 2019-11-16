@@ -157,7 +157,7 @@ fn format<P: AsRef<Path>>(config: &Config, path: P) -> Result<(), Error> {
     for _ in 0..insert_newline_before {
         insertion += "\n";
     }
-    let author = first_author(path)?;
+    let author = first_author(path).unwrap_or("Unknown Artist".to_string());
     let year = chrono::Utc::now().year().to_string();
     let license = config
         .template
@@ -196,8 +196,8 @@ struct Lang {
 fn main() {
     let matches = App::new("License Checker")
         .version("0.1.0")
-        .author("Kevin K. <kbknapp@gmail.com>")
-        .about("Does awesome things")
+        .author("elbaro <elbaro@users.noreply.github.com>")
+        .about("Check or Auto-insert a license header")
         .arg(
             Arg::with_name("config")
                 .long("config")
