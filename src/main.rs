@@ -173,18 +173,30 @@ fn format<P: AsRef<Path>>(config: &Config, path: P) -> Result<(), Error> {
         insertion += "\n";
     }
     buf.insert_str(loc, &insertion);
-    println!("{}", buf);
+    if !config.quiet {
+        println!("{}", buf);
+    }
+    if config.inplace {
+        std::fs::write(path, buf).expect(&format!("Fail to write back to {}", path.display()));
+    }
     Ok(())
 }
 
 #[derive(Deserialize)]
 struct Config {
+    // syntax options
     template: String,
     newline_after_shebang: bool,
     newline_after_template: bool,
 
     #[serde(flatten)]
     langs: HashMap<String, Lang>,
+
+    // meta optiona
+    quiet: bool,
+    
+    // format option
+    inplace: bool,
 }
 
 #[derive(Deserialize)]
@@ -225,18 +237,25 @@ fn main() {
                         .short("q")
                         .long("quiet")
                         .help("no stdout / stderr"),
+                )
+                .arg(
+                    Arg::with_name("inplace")
+                        .short("i")
+                        .long("inplace")
+                        .help("write changes to the file"),
                 ),
         )
         .get_matches();
 
     let config_path = matches.value_of("config").unwrap();
     let config_string = std::fs::read_to_string(config_path).expect("cannot read the config file");
-    let config: Config = toml::from_str(&config_string).expect("invalid toml");
+    let mut config: Config = toml::from_str(&config_string).expect("invalid toml");
 
     // You can handle information about subcommands by requesting their matches by name
     // (as below), requesting just the name used, or both at the same time
     if let Some(matches) = matches.subcommand_matches("lint") {
         let path = matches.value_of("path").unwrap();
+        config.quiet |= matches.is_present("quiet");
         let res = lint(&config, path);
         if res.is_err() {
             if !matches.is_present("quiet") {
@@ -246,6 +265,11 @@ fn main() {
         }
     } else if let Some(matches) = matches.subcommand_matches("format") {
         let path = matches.value_of("path").unwrap();
+        if matches.is_present("inplace") {
+            config.inplace = true
+        }
+        config.quiet |= matches.is_present("quiet");
+        
         let res = format(&config, path);
         if res.is_err() {
             if !matches.is_present("quiet") {

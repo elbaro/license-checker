@@ -6,6 +6,9 @@ Author: {author}
 newline_after_shebang = true
 newline_after_template = true
 
+quiet = false
+inplace = false
+
 [cc]
 extensions = ["c","cc","cpp","h","hpp"]
 comment = "//"
