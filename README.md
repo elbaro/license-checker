@@ -23,3 +23,5 @@ Formatted:
 
 int main() { return 0; }
 ```
+
+The author is chosen by `git-blame HEAD` and counting LOC.
